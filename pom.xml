@@ -36,7 +36,7 @@ THE SOFTWARE.
 
   <artifactId>job-poll-action-plugin</artifactId>
   <packaging>hpi</packaging>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
 
   <name>Job Poll Action Plugin</name>
   <description>Provides an easy mechanism to force a job to poll for SCM changes.</description>
