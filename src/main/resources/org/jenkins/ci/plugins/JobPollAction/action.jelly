@@ -1,15 +1,6 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-<![CDATA[	
-	<script>
-		function doSCMPoll() {
-		    var method = "post"; 
-		    var form = document.createElement("form");
-		    form.setAttribute("method", method);
-		    form.setAttribute("action", "poll");		
-		    document.body.appendChild(form);
-		    form.submit();
-		}
-	</script>
-]]>
-	<l:task icon="${h.getIconFilePath(from)}" title="${from.displayName}" href="javascript:doSCMPoll();" />
+	<j:if test="${h.hasPermission(it,it.BUILD) and it.scm != null and it.scm.class.name != 'hudson.scm.NullSCM'}">
+		<l:task icon="${h.getIconFilePath(from)}" title="${from.displayName}" href="/job/${it.name}/poll" />
+	</j:if>
 </j:jelly>

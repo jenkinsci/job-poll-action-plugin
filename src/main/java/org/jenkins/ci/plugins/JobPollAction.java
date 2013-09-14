@@ -26,11 +26,15 @@ package org.jenkins.ci.plugins;
 
 import hudson.model.Action;
 import hudson.model.AbstractProject;
+import hudson.triggers.SCMTrigger.SCMAction;
+import hudson.util.HttpResponses;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.apache.commons.jelly.XMLOutput;
+import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -48,27 +52,73 @@ public final class JobPollAction implements Action {
 
     public JobPollAction(
             @SuppressWarnings("rawtypes") final AbstractProject target) {
-        super();
         this.target = target;
     }
 
-    public void doDynamic(final String token, final StaplerRequest request,
-            final StaplerResponse response) throws IOException,
-            ServletException {
-        if (target != null) {
-            target.doPolling(request, response);
-        }
+    public AbstractProject<?,?> getOwner() {
+        return target;
     }
 
-    public String getDisplayName() {
-        return Messages.ActionLabel();
-    }
-
+    
     public String getIconFileName() {
         return "clipboard.png";
     }
 
     public String getUrlName() {
         return "poll";
+    }
+    
+    public String getDisplayName() {
+    	return Messages.ActionLabel();
+    }
+    
+    public String getTitle() {
+    	String result = null;
+    	SCMAction scmAction = target.getAction(SCMAction.class);
+    	if(scmAction != null) {
+    		result = scmAction.getDisplayName();
+    	}
+    	return result;
+    }
+    
+    public String getLogText() {
+    	String result = null;
+    	SCMAction scmAction = target.getAction(SCMAction.class);
+    	if(scmAction != null) {
+    		try {
+				result = scmAction.getLog();
+				
+			} catch (IOException e) {
+			}
+    	}
+    	
+    	return result;
+    }
+    
+    public HttpResponse doLog(StaplerRequest req, StaplerResponse rsp ) {
+    	HttpResponse result = new HttpResponse() {
+			public void generateResponse(StaplerRequest req, StaplerResponse rsp,
+					Object node) throws IOException, ServletException {
+				SCMAction scmAction = target.getAction(SCMAction.class);
+		    	if(scmAction != null) {
+		    		try {
+						String log = scmAction.getLog();
+						rsp.getWriter().write(log);
+						
+					} catch (IOException e) {
+					}
+		    	}
+				
+			}
+		};
+    	
+    	return result;
+    }
+    
+    public void writeLogTo(XMLOutput out) throws IOException {
+    	SCMAction scmAction = target.getAction(SCMAction.class);
+    	if(scmAction != null) {
+    		scmAction.writeLogTo(out);
+    	}
     }
 }
