@@ -52,7 +52,7 @@ THE SOFTWARE.
 				    			if(rsp.responseText.search("Done. Took") &lt; 0) {
 				    				setTimeout(f, 1000);
 				    			}
-				    			$$("pollLog").innerText = rsp.responseText;
+				    			$$("pollLog").innerHTML = rsp.responseText;
 				    		}
 			    		});
 			    };	

@@ -26,6 +26,7 @@ package org.jenkins.ci.plugins;
 
 import hudson.model.Action;
 import hudson.model.AbstractProject;
+import hudson.triggers.SCMTrigger;
 import hudson.triggers.SCMTrigger.SCMAction;
 import hudson.util.HttpResponses;
 
@@ -102,9 +103,8 @@ public final class JobPollAction implements Action {
 				SCMAction scmAction = target.getAction(SCMAction.class);
 		    	if(scmAction != null) {
 		    		try {
-						String log = scmAction.getLog();
-						rsp.getWriter().write(log);
-						
+						XMLOutput xmlOutput = XMLOutput.createXMLOutput(rsp.getWriter());
+						scmAction.writeLogTo(xmlOutput);
 					} catch (IOException e) {
 					}
 		    	}
@@ -120,5 +120,9 @@ public final class JobPollAction implements Action {
     	if(scmAction != null) {
     		scmAction.writeLogTo(out);
     	}
+    }
+    
+    public boolean isPollingEnabled() {
+    	return target.getScm().supportsPolling() &&  target.getTrigger(SCMTrigger.class) != null;
     }
 }

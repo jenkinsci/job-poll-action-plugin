@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-	<j:if test="${h.hasPermission(it,it.BUILD) and it.scm != null and it.scm.class.name != 'hudson.scm.NullSCM'}">
+	<j:if test="${h.hasPermission(it,it.BUILD) and from.pollingEnabled}">
 		<l:task icon="${h.getIconFilePath(from)}" title="${from.displayName}" href="/job/${it.name}/poll" />
 	</j:if>
 </j:jelly>
