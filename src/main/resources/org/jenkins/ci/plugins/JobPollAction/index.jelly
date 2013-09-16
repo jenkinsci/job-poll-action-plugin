@@ -27,21 +27,20 @@ THE SOFTWARE.
   <l:layout>
     <st:include it="${it.owner}" page="sidepanel.jelly" />
     <l:main-panel>
-      <h1>${%title(it.title)}</h1>
+      <h1>${%Detecting changes}
+      	<span id="pollingLogProcessingDiv">
+        	 <img src="${imagesURL}/spinner.gif" alt="" />
+        </span>
+      </h1>
+        
       <j:set var="log" value="${it.logText}" />
       <pre id="pollLog">
-	      <j:choose>
-		        <j:when test="${empty(logText)}">
-		          ${%Polling has not run yet.}
-		        </j:when>
-		        <j:otherwise>
-		          
-		            <st:getOutput var="output" />
-		            <j:whitespace>${it.writeLogTo(output)}</j:whitespace>
-		          
-		        </j:otherwise>
-	        </j:choose>
-        </pre>
+	     <st:getOutput var="output" />
+	     <j:if test="${!empty(logText)}">
+			 <j:whitespace>${it.writeLogTo(output)}</j:whitespace>
+		 </j:if>
+      </pre>
+        	 
         <script>
 			function doSCMPoll() {
 				new Ajax.Request("/job/${it.owner.name}/polling/", {});
@@ -51,6 +50,8 @@ THE SOFTWARE.
 				    		onSuccess: function(rsp) {
 				    			if(rsp.responseText.search("Done. Took") &lt; 0) {
 				    				setTimeout(f, 1000);
+				    			}else {
+				    				$$("pollingLogProcessingDiv").hide();
 				    			}
 				    			$$("pollLog").innerHTML = rsp.responseText;
 				    		}

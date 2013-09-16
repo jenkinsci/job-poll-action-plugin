@@ -62,7 +62,7 @@ public final class JobPollAction implements Action {
 
     
     public String getIconFileName() {
-        return "clipboard.png";
+        return "search.png";
     }
 
     public String getUrlName() {
