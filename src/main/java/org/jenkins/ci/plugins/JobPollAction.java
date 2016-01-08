@@ -28,7 +28,6 @@ import hudson.model.Action;
 import hudson.model.AbstractProject;
 import hudson.triggers.SCMTrigger;
 import hudson.triggers.SCMTrigger.SCMAction;
-import hudson.util.HttpResponses;
 
 import java.io.IOException;
 
@@ -40,89 +39,95 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 /**
- * A very simple {@link hudson.model.Action} which provides a <code>poll</code>
- * URL target to force polling for the specified
+ * A very simple {@link hudson.model.Action} which provides a <code>poll</code> URL target to force polling for the specified
  * {@link hudson.model.AbstractProject}.
  * 
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  * @since 1.0
  */
 public final class JobPollAction implements Action {
-    @SuppressWarnings({ "rawtypes" })
-    private final AbstractProject target;
+	@SuppressWarnings({"rawtypes"})
+	private final AbstractProject target;
 
-    public JobPollAction(
-            @SuppressWarnings("rawtypes") final AbstractProject target) {
-        this.target = target;
-    }
+	public JobPollAction(@SuppressWarnings("rawtypes") final AbstractProject target) {
+		this.target = target;
+	}
 
-    public AbstractProject<?,?> getOwner() {
-        return target;
-    }
+	public AbstractProject<?, ?> getOwner() {
+		return target;
+	}
 
-    
-    public String getIconFileName() {
-        return "search.png";
-    }
+	public String getIconFileName() {
+		return "search.png";
+	}
 
-    public String getUrlName() {
-        return "poll";
-    }
-    
-    public String getDisplayName() {
-    	return Messages.ActionLabel();
-    }
-    
-    public String getTitle() {
-    	String result = null;
-    	SCMAction scmAction = target.getAction(SCMAction.class);
-    	if(scmAction != null) {
-    		result = scmAction.getDisplayName();
-    	}
-    	return result;
-    }
-    
-    public String getLogText() {
-    	String result = null;
-    	SCMAction scmAction = target.getAction(SCMAction.class);
-    	if(scmAction != null) {
-    		try {
+	public String getUrlName() {
+		return "poll";
+	}
+
+	public String getDisplayName() {
+		return Messages.ActionLabel();
+	}
+
+	public String getTitle() {
+		String result = null;
+		SCMAction scmAction = target.getAction(SCMAction.class);
+		if(scmAction != null) {
+			result = scmAction.getDisplayName();
+		}
+		return result;
+	}
+
+	public String getLogText() {
+		String result = null;
+		SCMAction scmAction = target.getAction(SCMAction.class);
+		if(scmAction != null) {
+			try {
 				result = scmAction.getLog();
-				
-			} catch (IOException e) {
+
 			}
-    	}
-    	
-    	return result;
-    }
-    
-    public HttpResponse doLog(StaplerRequest req, StaplerResponse rsp ) {
-    	HttpResponse result = new HttpResponse() {
-			public void generateResponse(StaplerRequest req, StaplerResponse rsp,
-					Object node) throws IOException, ServletException {
+			catch(IOException e) {}
+		}
+
+		return result;
+	}
+
+	public HttpResponse doLog(StaplerRequest req, StaplerResponse rsp) {
+		HttpResponse result = new HttpResponse() {
+			public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException, ServletException {
 				SCMAction scmAction = target.getAction(SCMAction.class);
-		    	if(scmAction != null) {
-		    		try {
+				if(scmAction != null) {
+					try {
 						XMLOutput xmlOutput = XMLOutput.createXMLOutput(rsp.getWriter());
 						scmAction.writeLogTo(xmlOutput);
-					} catch (IOException e) {
 					}
-		    	}
-				
+					catch(IOException e) {}
+				}
+
 			}
 		};
-    	
-    	return result;
-    }
-    
-    public void writeLogTo(XMLOutput out) throws IOException {
-    	SCMAction scmAction = target.getAction(SCMAction.class);
-    	if(scmAction != null) {
-    		scmAction.writeLogTo(out);
-    	}
-    }
-    
-    public boolean isPollingEnabled() {
-    	return target.getScm().supportsPolling() &&  target.getTrigger(SCMTrigger.class) != null;
-    }
+
+		return result;
+	}
+
+	public void writeLogTo(XMLOutput out) throws IOException {
+		SCMAction scmAction = target.getAction(SCMAction.class);
+		if(scmAction != null) {
+			scmAction.writeLogTo(out);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean isPollingEnabled() {
+		return target.getScm().supportsPolling() && target.getTrigger(SCMTrigger.class) != null;
+	}
+
+	public String getTargetName() {
+		String name = "";
+		if(target.getName() != null) {
+			name = target.getName().replaceAll(" ", "%20");
+		}
+
+		return name;
+	}
 }
