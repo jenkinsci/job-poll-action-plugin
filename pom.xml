@@ -95,6 +95,14 @@ THE SOFTWARE.
       <id>github-project-site</id>
       <url>gitsite:git@github.com/jenkinsci/job-poll-action-plugin</url>
     </site>
+    <repository>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/snapshots/</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <build>
