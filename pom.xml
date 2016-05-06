@@ -36,7 +36,7 @@ THE SOFTWARE.
 
   <artifactId>job-poll-action-plugin</artifactId>
   <packaging>hpi</packaging>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
 
   <name>Job Poll Action Plugin</name>
   <description>Provides an easy mechanism to force a job to poll for SCM changes.</description>
@@ -66,7 +66,7 @@ THE SOFTWARE.
     <connection>scm:git:git://github.com/jenkinsci/job-poll-action-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/job-poll-action-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/job-poll-action-plugin</url>
-    <tag>job-poll-action-plugin-1.1</tag>
+    <tag>HEAD</tag>
   </scm>
   
   <properties>
