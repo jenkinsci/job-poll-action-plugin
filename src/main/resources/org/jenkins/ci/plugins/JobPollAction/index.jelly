@@ -32,7 +32,7 @@ THE SOFTWARE.
         	 <img src="${imagesURL}/spinner.gif" alt="" />
         </span>
       </h1>
-        
+
       <j:set var="log" value="${it.logText}" />
       <pre id="pollLog">
 	     <st:getOutput var="output" />
@@ -40,13 +40,13 @@ THE SOFTWARE.
 			 <j:whitespace>${it.writeLogTo(output)}</j:whitespace>
 		 </j:if>
       </pre>
-        	 
+
         <script>
 			function doSCMPoll() {
-				new Ajax.Request("/job/${it.owner.name}/polling/", {});
-				
+				new Ajax.Request("${rootURL}/${it.owner.url}/polling/", {});
+
 				var pollingFunction = function f() {
-			    	new Ajax.Request("/job/${it.owner.name}/poll/log/", {
+			    	new Ajax.Request("${rootURL}/${it.owner.url}/poll/log/", {
 				    		onSuccess: function(rsp) {
 				    			if(rsp.responseText.search("Done. Took") &lt; 0) {
 				    				setTimeout(f, 1000);
@@ -56,15 +56,15 @@ THE SOFTWARE.
 				    			$$("pollLog").innerHTML = rsp.responseText;
 				    		}
 			    		});
-			    };	
-			    
+			    };
+
 			    setTimeout(pollingFunction, 1000);
-			    
+
 			}
-			
+
 			doSCMPoll();
 		</script>
-      
+
     </l:main-panel>
   </l:layout>
 </j:jelly>
